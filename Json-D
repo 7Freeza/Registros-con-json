@@ -1,0 +1,39 @@
+{
+    "estudiantes": [
+        {
+            "id": 1048229292,
+            "nombre": "Jander",
+            "apellido": "Arguello",
+            "edad": 30,
+            "nvlIngles": "A0"
+        },
+        {
+            "id": 1048229296,
+            "nombre": "Luisa",
+            "apellido": "De la Rosa",
+            "edad": 19,
+            "nvlIngles": "C3"
+        },
+        {
+            "id": 1048229297,
+            "nombre": "Maria",
+            "apellido": "Sanchez",
+            "edad": 19,
+            "nvlIngles": "C1"
+        },
+        {
+            "id": 1048229300,
+            "nombre": "Sebastian",
+            "apellido": "Perez",
+            "edad": 18,
+            "nvlIngles": "B2"
+        },
+        {
+            "id": 1048229301,
+            "nombre": "Elianis",
+            "apellido": "Martinez",
+            "edad": 19,
+            "nvlIngles": "B1"
+        }
+    ]
+}
