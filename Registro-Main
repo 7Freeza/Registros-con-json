@@ -1,0 +1,170 @@
+import json
+
+#CLAN MICAELA REGISTRO DE PRACTICA
+
+# Nombre de el archivo json
+
+ARCHIVO_JSON = "estudiantes.json"
+
+
+# Cargamos el archivo JSON y devolvemos la lista de estudiantes
+def cargar_datos():
+    try:
+        archivo = open(ARCHIVO_JSON, "r", encoding="utf-8")
+        datos   = json.load(archivo)
+        archivo.close()
+        return datos["estudiantes"]
+    except FileNotFoundError:
+        print("Archivo JSON no encontrado. Verifica que estudiantes.json esté en la misma carpeta.")
+        return []
+    except:
+        print("Error al leer el archivo JSON.")
+        return []
+
+
+# Guardamos la lista de estudiantes de vuelta en el archivo JSON
+def guardar_datos(estudiantes):
+    try:
+        archivo = open(ARCHIVO_JSON, "w", encoding="utf-8")
+        json.dump({"estudiantes": estudiantes}, archivo, ensure_ascii=False, indent=4)
+        archivo.close()
+        print("Cambios guardados en el archivo JSON.")
+    except:
+        print("Error al guardar el archivo JSON.")
+
+
+# Pedimos y validamos solo números
+def pedir_numero(mensaje):
+    ejecutando = False
+    while not ejecutando:
+        try:
+            opcion = input(mensaje).strip()
+            if len(opcion) == 0:
+                print("Este apartado no puede estar vacío.")
+            elif opcion.isalpha():
+                print("Este apartado solo puede tener números.")
+            else:
+                ejecutando = True
+        except:
+            print("Error grave, intenta de nuevo.")
+    return opcion
+
+
+# Mostramos todos los estudiantes recorriendo la lista con for
+def mostrar_todos(estudiantes):
+    if len(estudiantes) == 0:
+        print("No hay estudiantes registrados.")
+    else:
+        print("\n==== LISTA DE ESTUDIANTES ====")
+        for estudiante in estudiantes:
+            print(f"  ID: {estudiante['id']} | {estudiante['nombre']} {estudiante['apellido']} | Edad: {estudiante['edad']} | Inglés: {estudiante['nvlIngles']}")
+        print("==============================")
+
+
+# Buscamos un estudiante por su ID
+def buscar_estudiante(estudiantes):
+    id_buscar  = int(pedir_numero("ID del estudiante a buscar: "))
+    encontrado = False
+    for estudiante in estudiantes:
+        if estudiante["id"] == id_buscar:
+            print(f"  Nombre   : {estudiante['nombre']} {estudiante['apellido']}")
+            print(f"  Edad     : {estudiante['edad']}")
+            print(f"  Inglés   : {estudiante['nvlIngles']}")
+            encontrado = True
+    if not encontrado:
+        print("Estudiante no encontrado.")
+
+
+# Añadimos un nuevo estudiante a la lista y guardamos en el JSON
+def añadir_estudiante(estudiantes):
+    id_nuevo  = int(pedir_numero("ID nuevo: "))
+    nombre    = input("Nombre: ").strip()
+    apellido  = input("Apellido: ").strip()
+    edad      = int(pedir_numero("Edad: "))
+    ingles    = input("Nivel de inglés: ").strip()
+
+    estudiante_nuevo = {
+        "id":        id_nuevo,
+        "nombre":    nombre,
+        "apellido":  apellido,
+        "edad":      edad,
+        "nvlIngles": ingles
+    }
+
+    estudiantes.append(estudiante_nuevo)
+    guardar_datos(estudiantes)
+    print(f"Estudiante '{nombre}' añadido correctamente.")
+
+
+# Eliminamos un estudiante por su ID y guardamos en el JSON
+def eliminar_estudiante(estudiantes):
+    id_eliminar  = int(pedir_numero("ID del estudiante a eliminar: "))
+    encontrado   = False
+    for estudiante in estudiantes:
+        if estudiante["id"] == id_eliminar:
+            estudiantes.remove(estudiante)
+            guardar_datos(estudiantes)
+            print("Estudiante eliminado correctamente.")
+            encontrado = True
+            return
+    if not encontrado:
+        print("Estudiante no encontrado.")
+
+
+# Modificamos los datos de un estudiante por su ID y guardamos en el JSON
+def modificar_estudiante(estudiantes):
+    id_modificar = int(pedir_numero("ID del estudiante a modificar: "))
+    for estudiante in estudiantes:
+        if estudiante["id"] == id_modificar:
+            print("Deja en blanco si no quieres cambiar ese campo.")
+            nuevo_nombre = input(f"Nuevo nombre ({estudiante['nombre']}): ").strip()
+            nueva_edad   = input(f"Nueva edad ({estudiante['edad']}): ").strip()
+            nuevo_ingles = input(f"Nuevo nivel inglés ({estudiante['nvlIngles']}): ").strip()
+            if nuevo_nombre != "":
+                estudiante["nombre"]    = nuevo_nombre
+            if nueva_edad != "":
+                estudiante["edad"]      = int(nueva_edad)
+            if nuevo_ingles != "":
+                estudiante["nvlIngles"] = nuevo_ingles
+            guardar_datos(estudiantes)
+            print("Estudiante modificado correctamente.")
+            return
+    print("Estudiante no encontrado.")
+
+
+# Menú principal — se mantiene activo hasta que el usuario salga
+def main():
+    # Cargamos los datos del JSON al arrancar el programa
+    estudiantes = cargar_datos()
+
+    ejecutando = True
+    while ejecutando:
+        print("\n==== REGISTRO DE ESTUDIANTES ====")
+        print("1. Mostrar todos")
+        print("2. Buscar estudiante")
+        print("3. Añadir estudiante")
+        print("4. Eliminar estudiante")
+        print("5. Modificar estudiante")
+        print("0. Salir")
+        print("=================================")
+
+        opcion = pedir_numero("Elige una opción: ")
+
+        if opcion == "1":
+            mostrar_todos(estudiantes)
+        elif opcion == "2":
+            buscar_estudiante(estudiantes)
+        elif opcion == "3":
+            añadir_estudiante(estudiantes)
+        elif opcion == "4":
+            eliminar_estudiante(estudiantes)
+        elif opcion == "5":
+            modificar_estudiante(estudiantes)
+        elif opcion == "0":
+            print("Hasta luego.")
+            ejecutando = False
+        else:
+            print("Opción no válida.")
+
+
+main()
